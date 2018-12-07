@@ -1,0 +1,81 @@
+.item{
+  background-color: white;
+  border-radius: 5px;
+  margin: 5px;
+}
+
+.container-fluid{
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 42px;
+  background: #21202D;
+}
+
+#container{
+  position: absolute;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  padding-left: 5px;
+  border: none;
+  z-index: 30;
+  /* background: #f3f3f3; */
+}
+
+.toggle-on.btn {
+    /* padding-right: 0; */
+    padding-top: 0.25em;
+    border: 1px solid #ccc;
+}
+
+.toggle-off.btn {
+    /* padding-left: 0; */
+    padding-top: 0.25em;
+    border: 1px solid #ccc;
+}
+
+.toggle-handle{
+    border-color: #ccc;
+}
+
+.left{
+  text-align: right;
+  padding: .375rem .75rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  vertical-align: middle;
+}
+
+.card-body .row{
+  padding-bottom: 0.5em;
+}
+
+input{
+  border: 1px solid #ccc;
+  padding: .375rem .75rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  border-radius: .25rem;
+}
+
+.redraw{
+  width: 100%;
+  background-color: #5f5c7d;
+  cursor: pointer !important;
+  color: white !important;
+}
+
+.redraw:hover{
+  background-color: #3f3d52;
+}
+
+.nav-link {
+    color: #ccc;
+}
+
+.nav-link:hover {
+    color: black;
+}
