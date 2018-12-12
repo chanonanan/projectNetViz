@@ -28,39 +28,45 @@ var series = [];
 var legend = [];
 var maxValue = 0;
 var split = 8;
-var client = new $.es.Client({
-  hosts: '10.3.132.185:9200'
-});
-
-client.ping({
-  requestTimeout: 30000,
-}, function (error) {
-  if (error) {
-    console.error('elasticsearch cluster is down!');
-  } else {
-    console.log('All is well');
-  }
-});
-
-
-client.search({
-  index: 'logstash-2018.12.07',
-  body: {
-    query: {
-            match_all : {}
-    },
-    size:10000,
-  }
-}).then(function (resp) {
-  console.log('res',resp);
-    // var hits = resp.hits.hits;
-}, function (err) {
-    console.trace(err.message);
-});
+// var client = new $.es.Client({
+//   hosts: '10.3.132.185:9200'
+// });
+//
+// client.ping({
+//   requestTimeout: 30000,
+// }, function (error) {
+//   if (error) {
+//     console.error('elasticsearch cluster is down!');
+//   } else {
+//     console.log('All is well');
+//   }
+// });
+//
+//
+// client.search({
+//   index: 'logstash-2018.12.07',
+//   body: {
+//     query: {
+//             match_all : {}
+//     },
+//     size:10000,
+//   }
+// }).then(function (resp) {
+//   console.log('res',resp);
+//     // var hits = resp.hits.hits;
+// }, function (err) {
+//     console.trace(err.message);
+// });
 
 $(document).ready(function(){
 
   $('.file-upload').file_upload();
+
+  $('input[name="daterange"]').daterangepicker({
+    opens: 'left'
+  }, function(start, end, label) {
+    console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+  });
 
   for(var i=0;i<256;i++){
     active[i] = {};

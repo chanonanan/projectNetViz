@@ -4,7 +4,7 @@
        <meta charset="utf-8">
        <script src="/assets/js/jquery.min.js"></script>
        <script src="/assets/js/papaparse.min.js"></script>
-       <!-- <script src="/assets/js/moment.min.js"></script> -->
+       <script src="/assets/js/moment.min.js"></script>
        <script src="/assets/js/bootstrap.min.js"></script>
        <script src="/assets/js/elasticsearch.min.js"></script>
        <script src="/assets/js/elasticsearch.jquery.min.js"></script>
@@ -18,6 +18,9 @@
        <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
        <link rel="stylesheet" href="/assets/css/project.css">
        <link rel="stylesheet" href="/assets/css/file-upload.css">
+
+       <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
    </head>
    <!-- f3f3f3 -->
    <body style="height: 100%; margin: 0;">
@@ -40,7 +43,7 @@
             </div>
             <div class="card-body">
               <div class="row">
-                <div class="col-4 left">
+                <div class="col-4 leftDiv">
                   <span>Show by: </span>
                 </div>
                 <div class="col-8">
@@ -48,7 +51,7 @@
                 </div>
               </div>
               <div class="row">
-                <div class="col-4 left">
+                <div class="col-4 leftDiv">
                   <span>Stay Alerted at: </span>
                 </div>
                 <div class="col-8">
@@ -56,11 +59,20 @@
                 </div>
               </div>
               <div class="row">
-                <div class="col-4 left">
+                <div class="col-4 leftDiv">
                   <span>Split: </span>
                 </div>
                 <div class="col-8">
                   <input type="number" min="1" value="8" id="splitValue">
+                </div>
+                <span>: </span>
+              </div>
+              <div class="row">
+                <div class="col-4 left">
+                  <span>Date picker: </span>
+                </div>
+                <div class="col-8">
+                  <input type="text" name="daterange" value="01/01/2018 - 01/15/2018" />
                 </div>
                 <span>: </span>
               </div>
