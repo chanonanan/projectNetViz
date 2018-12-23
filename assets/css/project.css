@@ -4,6 +4,10 @@
   margin: 5px;
 }
 
+input[type="file"] {
+    cursor:pointer;
+}
+
 .container-fluid{
   position: absolute;
   left: 0;
