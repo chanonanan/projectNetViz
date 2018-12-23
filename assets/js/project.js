@@ -387,6 +387,8 @@ function searchelk(){
       function(resp) {
         // console.log('res',resp);
         x = [];
+        allDatas = [];
+        datas = {};
           // var hits = resp.hits.hits;
           for(var i=0;i<256;i++){
             active[i] = {};
@@ -401,6 +403,8 @@ function searchelk(){
                 active[ipv4[2]][ipv4[3]]++;
               }
             }
+          }else{
+
           }
 
 
