@@ -36,7 +36,7 @@
     </ul>
     <div class="container-fluid">
       <div class="row" style="height:100%;">
-        <div class="col-3 col-md-3" style="height:100%;padding-top: 15px;">
+        <div class="col-3 col-md-4" style="height:100%;padding-top: 15px;">
           <div class="card">
             <div class="card-header">
               Control Box
@@ -65,23 +65,25 @@
                 <div class="col-8">
                   <input type="number" min="1" value="8" id="splitValue">
                 </div>
-                <span>: </span>
               </div>
               <div class="row">
-                <div class="col-4 left">
+                <div class="col-4 leftDiv">
                   <span>Date picker: </span>
                 </div>
                 <div class="col-8">
                   <input type="text" name="daterange" value="01/01/2018 - 01/15/2018" />
                 </div>
-                <span>: </span>
               </div>
-              <a class="btn redraw" onclick="genGraph()">redraw Graph</a>
+              <a class="btn redraw" onclick="searchelk()">redraw Graph</a>
             </div>
           </div>
 
         </div>
-        <div class="col-9 col-md-9" style="height:100%;">
+        <div class="col-9 col-md-8" style="height:100%;">
+          <div class="row justify-content-md-center">
+            <div class="lds-roller" id="loading"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+            <!-- <div class="lds-facebook" id="loading"><div></div><div></div><div></div></div> -->
+          </div>
           <div id="container" style="height: 100;"></div>
         </div>
       </div>
@@ -92,26 +94,32 @@
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Log Upload (Demo)</h5>
+            <h5 class="modal-title" id="exampleModalLabel">Log Upload</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
+          <form class="form-horizontal" method="post" enctype="multipart/form-data" id="upload-log">
           <div class="modal-body">
-            <form class="form-horizontal">
                 <!-- <div class="form-group"> -->
-                    <div class="row justify-content-md-center">
-                        <label class="file-upload btn btn-primary">
-                            Browse for file ... <input type="file" />
-                        </label>
-                    </div>
+              <div class="row justify-content-md-center">
+                  <label class="file-upload btn btn-primary">
+                      Browse for file ... <input type="file" name="avatar"/>
+                  </label>
+              </div>
+              <div class="row justify-content-md-center">
+                  <progress id="progressBar" value="0" max="100" style="width:300px;display: none;"></progress>
+                  <h3 id="status"></h3>
+              </div>
+
                 <!-- </div> -->
-            </form>
+
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary" onclick="upload()">Save changes</button>
+            <button type="button" class="btn btn-primary" id="filesubmit">Upload</button>
           </div>
+          </form>
         </div>
       </div>
     </div>

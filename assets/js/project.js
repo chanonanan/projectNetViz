@@ -28,9 +28,12 @@ var series = [];
 var legend = [];
 var maxValue = 0;
 var split = 8;
-// var client = new $.es.Client({
-//   hosts: '10.3.132.185:9200'
-// });
+var startDate = 1483290948262;
+var endDate = 1483328674000;
+var init = true;
+var client = new $.es.Client({
+  hosts: '10.3.132.185:9200'
+});
 //
 // client.ping({
 //   requestTimeout: 30000,
@@ -43,91 +46,75 @@ var split = 8;
 // });
 //
 //
-// client.search({
-//   index: 'logstash-2018.12.07',
-//   body: {
-//     query: {
-//             match_all : {}
-//     },
-//     size:10000,
-//   }
-// }).then(function (resp) {
-//   console.log('res',resp);
-//     // var hits = resp.hits.hits;
-// }, function (err) {
-//     console.trace(err.message);
-// });
+
 
 $(document).ready(function(){
 
+  searchelk();
   $('.file-upload').file_upload();
 
+  $('form #filesubmit').on('click', (e)=>{
+        var uploadfile = $("input[name=avatar]")[0].files[0];
+        var formData = new FormData();
+        formData.append("avatar", uploadfile);
+        var localurl = 'http://10.3.132.185:7777/uploadlog';
+        // console.log('uploadfile', uploadfile, uploadfile.type);
+        $.ajax({
+            url: localurl,  // googleCloud
+            data: formData,
+            processData: false,
+            contentType: false,
+            type: 'POST',
+            xhr: function(){
+          		//upload Progress
+          		var xhr = $.ajaxSettings.xhr();
+          		if (xhr.upload) {
+          			xhr.upload.addEventListener('progress', function(event) {
+          				var percent = 0;
+          				var position = event.loaded || event.position;
+          				var total = event.total;
+          				// if (event.lengthComputable) {
+          					percent = Math.round(position / total * 100);
+          				// }
+          				//update progressbar
+                  // console.log(percent);
+                  document.getElementById("progressBar").value = percent;
+          				document.getElementById("progressBar").style.display = 'block';
+                  document.getElementById("status").innerHTML = percent + "% uploaded... please wait";
+          			}, true);
+          		}
+          		return xhr;
+          	},
+            success: function(data){
+                // console.log('response data', data);
+                swal({
+                  title: "Upload log success!",
+                  text: " ",
+                  icon: "success",
+                  button: false,
+                  timer:1500,
+                });
+                $("input[name=avatar]").val('');
+                document.getElementById("progressBar").value = 0;
+                document.getElementById("progressBar").style.display = 'none';
+                document.getElementsByClassName("file-upload-text")[0].innerHTML = "Browse for file ...";
+                document.getElementById("status").innerHTML = "";
+                $('#exampleModal').modal('toggle');
+            }
+        });
+    });
+
   $('input[name="daterange"]').daterangepicker({
-    opens: 'left'
-  }, function(start, end, label) {
-    console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
-  });
-
-  for(var i=0;i<256;i++){
-    active[i] = {};
-    for(var j=0;j<256;j++){
-      active[i][j] = 0;
+    timePicker: true,
+    startDate: moment(parseInt(1483290948262)).format("DD/MM/YYYY hh:mm A"),
+    endDate: moment(parseInt(1483328674000)).format("DD/MM/YYYY hh:mm A"),
+    locale: {
+      format: "DD/MM/YYYY hh:mm A"
     }
-  }
-  Papa.parse('/assets/csv/login-20170102-anon.csv',{
-     delimiter: " ",
-     header: false,
-     download: true,
-     skipEmptyLines: true,
-     complete: function(results) {
-       console.log("results:", results);
-       for(var i=0;i<results.data.length;i++){
-         var ipv4 = results.data[i][5].split('.');
-         if(ipv4[0] == '158' && ipv4[1] == '108'){
-           active[ipv4[2]][ipv4[3]]++;
-         }
-       }
-
-
-       // var max = 0;
-       for(var i=0;i<256;i++){
-         x.push(i+'');
-         for(var j=0;j<256;j++){
-           for(var k of blockIP){
-             if(inSubNet('158.108.'+i+'.'+j, k.ip)){
-               faculty = k.name;
-               if(active[i][j]>0){
-                 allDatas.push([j,i,active[i][j]]);
-                 if(datas[k.name] == null){
-                   datas[k.name] = [[j,i,active[i][j]]];
-                 }else{
-                   datas[k.name].push([j,i,active[i][j]]);
-                 }
-               }else{
-                 // data.push([j,i,'-']);
-                 if(datas[k.name] == null){
-                   datas[k.name] = [[j,i,'-']];
-                 }else{
-                   datas[k.name].push([j,i,'-']);
-                 }
-
-               }
-
-             }
-           }
-
-
-           if(active[i][j]>maxValue){
-             maxValue = active[i][j];
-           }
-         }
-       }
-       console.log(datas);
-       document.getElementById("maxValue").value = maxValue;
-       genGraph();
-
-
-     }
+  }, function(start, end, label) {
+    // console.log("A new date selection was made: " + start.format('x') +',' + moment(start).utc().valueOf() + ' to ' + end.format('DD-MM-YYYY')  + ',' + moment(end).utc().valueOf());
+    startDate = moment(start).valueOf();
+    endDate = moment(end).valueOf();
   });
 })
 
@@ -135,7 +122,7 @@ function genGraph(){
   maxValue = parseInt(document.getElementById("maxValue").value);
   split = parseInt(document.getElementById("splitValue").value);
   var activeNO = $('#myRange').prop('checked');
-  console.log(maxValue,split,activeNO);
+  // console.log(maxValue,split,activeNO);
   series = [];
   legend = [];
   Object.keys(datas).forEach(function(key) {
@@ -178,7 +165,7 @@ function genGraph(){
       top.push(i);
     }
   }
-  console.log('top', top);
+  // console.log('top', top);
   series.push(
     {
         name: 'Alerted',
@@ -213,7 +200,7 @@ function genGraph(){
 
 function drawActive() {
 
-  console.log($('#myRange').prop('checked'))
+  // console.log($('#myRange').prop('checked'))
   // console.log(data,x,y,max);
   var dom = document.getElementById("container");
   let existInstance = echarts.getInstanceByDom(dom);
@@ -394,4 +381,93 @@ function upload() {
     button: false,
     timer:2500,
   });
+}
+
+function searchelk(){
+  document.getElementById("loading").style.display = 'block';
+  $.get(
+      "http://10.3.132.185:7777/range="+ startDate + '-'+endDate,
+      function(resp) {
+        // console.log('res',resp);
+        x = [];
+          // var hits = resp.hits.hits;
+          for(var i=0;i<256;i++){
+            active[i] = {};
+            for(var j=0;j<256;j++){
+              active[i][j] = 0;
+            }
+          }
+          if(resp.hits.total > 0){
+            for(let i of resp.hits.hits){
+              var ipv4 = i._source.ipv4.split('.');
+              if(ipv4[0] == '158' && ipv4[1] == '108'){
+                active[ipv4[2]][ipv4[3]]++;
+              }
+            }
+          }
+
+
+        for(var i=0;i<256;i++){
+          x.push(i+'');
+          for(var j=0;j<256;j++){
+            for(var k of blockIP){
+              if(inSubNet('158.108.'+i+'.'+j, k.ip)){
+                faculty = k.name;
+                if(active[i][j]>0){
+                  allDatas.push([j,i,active[i][j]]);
+                  if(datas[k.name] == null){
+                    datas[k.name] = [[j,i,active[i][j]]];
+                  }else{
+                    datas[k.name].push([j,i,active[i][j]]);
+                  }
+                }else{
+                  // data.push([j,i,'-']);
+                  if(datas[k.name] == null){
+                    datas[k.name] = [[j,i,'-']];
+                  }else{
+                    datas[k.name].push([j,i,'-']);
+                  }
+
+                }
+
+              }
+            }
+
+
+            if(active[i][j]>maxValue){
+              maxValue = active[i][j];
+            }
+          }
+        }
+        if(init){
+          document.getElementById("maxValue").value = maxValue;
+          init = false;
+        }
+
+        genGraph();
+        document.getElementById("loading").style.display = 'none';
+
+      }
+  );
+}
+
+
+function progressHandler(event) {
+  _("loaded_n_total").innerHTML = "Uploaded " + event.loaded + " bytes of " + event.total;
+  var percent = (event.loaded / event.total) * 100;
+  _("progressBar").value = Math.round(percent);
+  _("status").innerHTML = Math.round(percent) + "% uploaded... please wait";
+}
+
+function completeHandler(event) {
+  _("status").innerHTML = event.target.responseText;
+  _("progressBar").value = 0; //wil clear progress bar after successful upload
+}
+
+function errorHandler(event) {
+  _("status").innerHTML = "Upload Failed";
+}
+
+function abortHandler(event) {
+  _("status").innerHTML = "Upload Aborted";
 }
