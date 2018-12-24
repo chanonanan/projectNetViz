@@ -291,7 +291,7 @@ function drawActive() {
         }],
       grid: {
           height: '85%',
-          x: '15%',
+          x: '130px',
           y: '2%'
       },
       xAxis: {
